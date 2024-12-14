@@ -1,3 +1,3 @@
 # for task-1 the following are done
 1. analysis, data_visualization, dataloader and imports scripts are defined with their code logic to apply modularization
-2. the note book week 1 task-1 notebook.ipynb contains implementations of scripts with importing scripts logic and visualization
+2. notebooks folder contain 'week 1 task-1 notebook.ipynb' which shows the over all code flow by importing functions from scripts folder 'analysis.py', 'data_loader.py', 'imports.py' modular implementation is used to reduce code repetablity and better visualizations.
