@@ -5,6 +5,7 @@ from sklearn.decomposition import LatentDirichletAllocation
 import spacy
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
+from sklearn.feature_extraction.text import CountVectorizer
 
 def check_missing_value(data):
     missing_summary = data.isnull().sum()
@@ -149,3 +150,64 @@ def nlp_keyword_topic_analysis(data, text_column, n_topics=5, n_top_words=10, ng
 # data = pd.DataFrame({'headlines': ["FDA approves new drug for diabetes", "Stock market hits record highs", "Company reports Q4 earnings", "Analyst raises price target"]})
 # nlp_keyword_topic_analysis(data, text_column='headlines')
 
+
+
+def extract_keywords(data, text_column, max_features=20):
+    """
+    Extract common keywords from a specified text column.
+
+    Parameters:
+    - data (pd.DataFrame): The input DataFrame containing text data.
+    - text_column (str): The name of the column containing the text.
+    - max_features (int): Maximum number of keywords to extract.
+
+    Returns:
+    - keywords (list): A list of the most common keywords.
+    """
+    vectorizer = CountVectorizer(stop_words='english', max_features=max_features)
+    X = vectorizer.fit_transform(data[text_column])
+    keywords = vectorizer.get_feature_names_out()
+    return keywords
+
+# publisher analysis
+def analyze_top_publishers(data, publisher_column, n=10):
+    """
+    Analyze top publishers and their contribution to the news feed.
+
+    Parameters:
+    - data (pd.DataFrame): The input dataset.
+    - publisher_column (str): The name of the column containing publisher names.
+    - n (int): Number of top publishers to analyze.
+
+    Returns:
+    - publisher_counts (pd.Series): Number of articles per publisher.
+    """
+    publisher_counts = data[publisher_column].value_counts().head(n)
+    return publisher_counts
+
+def classify_article_topic(data, text_column):
+    """
+    Classify articles into topics based on keywords.
+    
+    Parameters:
+    - data (pd.DataFrame): The input dataset.
+    - text_column (str): Column containing the article text or headlines.
+
+    Returns:
+    - data (pd.DataFrame): The dataset with an additional 'topic' column.
+    """
+    # Define keywords for topics
+    topics = {
+        'finance': ['market', 'stock', 'trade', 'investment'],
+        'health': ['health', 'drug', 'FDA', 'virus'],
+        'technology': ['technology', 'AI', 'tech', 'innovation']
+    }
+
+    def assign_topic(text):
+        for topic, keywords in topics.items():
+            if any(keyword.lower() in text.lower() for keyword in keywords):
+                return topic
+        return 'other'
+
+    data['topic'] = data[text_column].apply(assign_topic)
+    return data
