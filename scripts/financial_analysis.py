@@ -258,3 +258,34 @@ class FinancialVisualizer:
 # visualizer.plot_macd()
 # visualizer.plot_returns()
 # visualizer.plot_custom(columns=['Volume'], kind='bar', title='Trading Volume')
+
+
+class StockAnalysis:
+    def __init__(self, data):
+        """Initialize with the data."""
+        self.data = data
+
+    def calculate_daily_returns(self):
+        """
+        Calculate daily stock returns as percentage changes in the 'Close' column.
+        Adds a new column 'Daily Return' to the dataset.
+        """
+        self.data['Daily Return'] = self.data['Close'].pct_change() * 100
+        return self.data
+
+class CorrelationAnalysis:
+    def __init__(self, data):
+        """Initialize with the data."""
+        self.data = data
+
+    def calculate_correlation(self, sentiment_column='compound', return_column='Daily Return'):
+        """
+        Calculate the correlation between sentiment scores and daily stock returns.
+        Returns the correlation coefficient.
+        """
+        # Drop rows with NaN to ensure valid correlation computation
+        filtered_data = self.data[[sentiment_column, return_column]].dropna()
+
+        # Compute Pearson correlation coefficient
+        correlation = filtered_data[sentiment_column].corr(filtered_data[return_column])
+        return correlation
