@@ -1,4 +1,6 @@
-from imports import pd, plt, sns
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 def plot_univarate(data, column, title=None, x_axis_t=None, figsize=(8,4), color='skyblue', bins=20, kde=False):
     """

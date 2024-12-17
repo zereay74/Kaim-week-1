@@ -1,4 +1,5 @@
-from imports import pd, plt
+import pandas as pd
+import matplotlib as plt
 from dateutil import parser
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.decomposition import LatentDirichletAllocation
